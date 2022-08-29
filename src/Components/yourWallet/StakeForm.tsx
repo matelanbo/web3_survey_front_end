@@ -13,7 +13,8 @@ import SavingsIcon from '@mui/icons-material/Savings';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { type } from "os"
-import { CardActions, List, Typography } from "@mui/material"
+import { CardActions, List, Modal, Typography } from "@mui/material"
+import CreateSurvey from "./CreateSurvey"
 
 
 export interface StakeFormProps {
@@ -179,6 +180,44 @@ export const StakeForm = ({ token }: StakeFormProps) => {
     }
     )
 
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false)
+    const boxstyle = {
+        position: 'absolute' as 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    };
+
+
+    const createSurveyForm = <div>
+        <form onSubmit={handleQuestionnaireCreation}>
+            <label>
+                rewards to assign:
+                <input type="text" required value={rewardsToAssign} onChange={(e) => setRewardsToAssign(e.target.value)}>
+                </input>
+            </label>
+            <label>
+                Maximun answers to accept:
+                <input type="number" required value={maxAnswers} onChange={(e) => setMaxAnswers(e.target.value)}>
+                </input>
+            </label>
+            <label>
+                Deadline:
+                <input type="number" required value={deadline} onChange={(e) => setDeadline(e.target.value)}>
+                </input>
+            </label>
+            {isMining ? <CircularProgress size={26} /> :
+                <input type="submit" value="Creat Questionnaire!!!"></input>}
+        </form>
+    </div>
+
     //   console.log(isMining)
 
     // console.log(rewardsToAssign, maxAnswers, deadline)
@@ -186,25 +225,6 @@ export const StakeForm = ({ token }: StakeFormProps) => {
         <>
             <div>
                 <WalletBalance token={token}></WalletBalance>
-                <form onSubmit={handleQuestionnaireCreation}>
-                    <label>
-                        rewards to assign:
-                        <input type="text" required value={rewardsToAssign} onChange={(e) => setRewardsToAssign(e.target.value)}>
-                        </input>
-                    </label>
-                    <label>
-                        Maximun answers to accept:
-                        <input type="number" required value={maxAnswers} onChange={(e) => setMaxAnswers(e.target.value)}>
-                        </input>
-                    </label>
-                    <label>
-                        Deadline:
-                        <input type="number" required value={deadline} onChange={(e) => setDeadline(e.target.value)}>
-                        </input>
-                    </label>
-                    {isMining ? <CircularProgress size={26} /> :
-                        <input type="submit" value="Creat Questionnaire!!!"></input>}
-                </form>
             </div>
             <div>
                 <Card>
@@ -232,28 +252,6 @@ export const StakeForm = ({ token }: StakeFormProps) => {
                         }
                     </CardActions>
                 </Card>
-                <div>
-                    <Button
-                        startIcon={<UpdateIcon></UpdateIcon>}
-                        variant="contained"
-                        onClick={handleUpdateQuestions}
-                        color="secondary"
-                        size="large"
-                        disabled={isMining}>
-                        {isMining ? <CircularProgress size={26} /> : "Update questions status"}
-                    </Button>
-                </div>
-                <div>
-                    <Button
-                        startIcon={<UpdateIcon></UpdateIcon>}
-                        variant="outlined"
-                        onClick={handleUpdateMyRewards}
-                        color="secondary"
-                        size="large"
-                        disabled={isMining}>
-                        {isMining ? <CircularProgress size={26} /> : "Update my rewards"}
-                    </Button>
-                </div>
             </div>
             <div>
                 <Box>
@@ -276,10 +274,33 @@ export const StakeForm = ({ token }: StakeFormProps) => {
                             {getMyAnsweredQuestions}
                         </TabPanel>
                         <TabPanel value="2">
+                            <CreateSurvey content={createSurveyForm}></CreateSurvey>
                             {getMyCreatedQuestions}
                         </TabPanel>
                     </TabContext>
                 </Box>
+                <div>
+                    <Button
+                        startIcon={<UpdateIcon></UpdateIcon>}
+                        variant="contained"
+                        onClick={handleUpdateQuestions}
+                        color="secondary"
+                        size="large"
+                        disabled={isMining}>
+                        {isMining ? <CircularProgress size={26} /> : "Update questions status"}
+                    </Button>
+                </div>
+                <div>
+                    <Button
+                        startIcon={<UpdateIcon></UpdateIcon>}
+                        variant="outlined"
+                        onClick={handleUpdateMyRewards}
+                        color="secondary"
+                        size="large"
+                        disabled={isMining}>
+                        {isMining ? <CircularProgress size={26} /> : "Update my rewards"}
+                    </Button>
+                </div>
             </div>
         </>
     )
