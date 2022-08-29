@@ -40,7 +40,6 @@ export const Main = () => {
         name: "OT"
     }
     return (<>
-        <h2 className={classes.title}>Dapp Token App</h2>
         <StakeForm token={token} />
     </>)
 }

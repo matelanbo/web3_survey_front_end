@@ -14,7 +14,10 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { type } from "os"
 import { CardActions, List, Modal, Typography } from "@mui/material"
+import DownloadIcon from '@mui/icons-material/Download';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import CreateSurvey from "./CreateSurvey"
+import ViewSurvey from "./ViewSurvey"
 
 
 export interface StakeFormProps {
@@ -93,10 +96,9 @@ export const StakeForm = ({ token }: StakeFormProps) => {
     const isMining = approveAndStakeErc20State.status === "Mining" ||
         answerState.status === "Mining" ||
         claimRewardsState.status === "Mining"
-    const temp = useQuestionsList("0")
-    console.log(temp)
+
     //const myAnsweredQuestions = useMyAnsweredQuestions("0")
-    const questionsList = temp
+    const questionsList = useQuestionsList("0")
     //const questionsList = [{ 'id': 0, 'status': 0, 'answered': 11, 'maxAnswers': 20, "rewards": 1 }, { 'id': 1, 'status': 0, 'answered': 11, 'maxAnswers': 20, "rewards": 1 }, { 'id': 2, 'status': 1, 'answered': 11, 'maxAnswers': 20, "rewards": 1 }]
     console.log("questionsList out", questionsList)
     const activeQuestions = questionsList.map((questions) => {
@@ -104,13 +106,13 @@ export const StakeForm = ({ token }: StakeFormProps) => {
             return (
                 <Card variant="outlined">
                     <CardContent>
-                        <Typography sx={{ fontSize: 14 }} gutterBottom>
+                        <Typography sx={{ fontSize: 18 }} gutterBottom>
                             Question #{questions.id}   {questions.answered}/{questions.maxAnswers} Total Rewards: {questions.rewards}
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        <Button variant="contained" color="primary">View</Button>
-                        <Button
+                        <ViewSurvey></ViewSurvey>
+                        <Button startIcon={<QuestionAnswerIcon></QuestionAnswerIcon>}
                             variant="contained"
                             onClick={() => handleAnswer(questions.id.toString())}
                             color="primary"
@@ -118,7 +120,7 @@ export const StakeForm = ({ token }: StakeFormProps) => {
                             {isMining ? <CircularProgress size={26} /> : "Answer Question"}
                         </Button>
                     </CardActions>
-                </Card>
+                </Card >
             )
         }
     })
@@ -128,72 +130,57 @@ export const StakeForm = ({ token }: StakeFormProps) => {
             return (
                 <Card variant="outlined">
                     <CardContent>
-                        <Typography sx={{ fontSize: 14 }} gutterBottom>
+                        <Typography sx={{ fontSize: 18 }} gutterBottom>
                             Question {questions.id} closed status: {questions.status === 1 ? "Finished" : "Expired"}
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        <Button variant="contained" color="primary">View</Button>
+                        <ViewSurvey></ViewSurvey>
                     </CardActions>
                 </Card>
             )
         }
     })
 
-    const temp2 = useMyAnsweredQuestions("0")
-    console.log("my answered", temp2)
-    const myAnsweredQuestionsList = temp2
+    const myAnsweredQuestionsList = useMyAnsweredQuestions("0")
+    const numberOfMyAnswered = myAnsweredQuestionsList.length
     const getMyAnsweredQuestions = myAnsweredQuestionsList.map((questionId: number) => {
         const question = questionsList[questionId]
         return (
             <Card variant="outlined">
                 <CardContent>
-                    <Typography sx={{ fontSize: 14 }} gutterBottom>
+                    <Typography sx={{ fontSize: 18 }} gutterBottom>
                         Question #{question.id}   {question.answered}/{question.maxAnswers} Status: {question.status === 0 ? "open" : "closed"} Total Rewards:{question.rewards}
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <Button variant="contained" color="primary">View</Button>
-                </CardActions>
-            </Card>
-        )
-    }
-    )
-    const temp3 = useMyCreatedQuestions("0")
-    console.log("my created", temp3)
-    const myCreatedQuestionsList = temp3
-    const getMyCreatedQuestions = myCreatedQuestionsList.map((questionId: number) => {
-        const question = questionsList[questionId]
-        return (
-            <Card variant="outlined">
-                <CardContent>
-                    <Typography sx={{ fontSize: 14 }} gutterBottom>
-                        Question #{question.id}   {question.answered} / {question.maxAnswers} Status: {question.status === 0 ? "open" : "closed"}, Rewards: {question.rewards}
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <Button variant="contained" color="primary">View</Button>
-                    <Button variant="contained" color="primary">Download Results</Button>
+                    <ViewSurvey></ViewSurvey>
                 </CardActions>
             </Card>
         )
     }
     )
 
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false)
-    const boxstyle = {
-        position: 'absolute' as 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 400,
-        bgcolor: 'background.paper',
-        border: '2px solid #000',
-        boxShadow: 24,
-        p: 4,
-    };
+    const myCreatedQuestionsList = useMyCreatedQuestions("0")
+    const numberOfMyCreated = myCreatedQuestionsList.length
+    const getMyCreatedQuestions = myCreatedQuestionsList.map((questionId: number) => {
+        const question = questionsList[questionId]
+        return (
+            <Card variant="outlined">
+                <CardContent>
+                    <Typography sx={{ fontSize: 18 }} gutterBottom>
+                        Question #{question.id}   {question.answered} / {question.maxAnswers} Status: {question.status === 0 ? "open" : "closed"}, Rewards: {question.rewards}
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                    <ViewSurvey></ViewSurvey>
+                    <Button startIcon={<DownloadIcon></DownloadIcon>} variant="contained" color="primary">Download Results</Button>
+                </CardActions>
+            </Card>
+        )
+    }
+    )
+
 
 
     const createSurveyForm = <div>
@@ -227,15 +214,15 @@ export const StakeForm = ({ token }: StakeFormProps) => {
                 <WalletBalance token={token}></WalletBalance>
             </div>
             <div>
-                <Card>
-                    <CardContent style={{ backgroundColor: '#d0dcc0' }}>
+                <Card variant="outlined">
+                    <CardContent>
 
                         <Typography sx={{ fontSize: 24, fontStyle: 'normal', alignSelf: 'flex-end' }} gutterBottom>
                             Your token rewards:{formattedRewards}
                         </Typography>
 
                     </CardContent>
-                    <CardActions style={{ backgroundColor: '#d0dcc0' }}>
+                    <CardActions >
                         {formattedRewards === 0 ?
                             <p>No Rewards to claim!</p> :
                             <div>
@@ -266,15 +253,17 @@ export const StakeForm = ({ token }: StakeFormProps) => {
                             })}
                         </TabList>
                         <TabPanel value="0">
-                            <Typography sx={{ textAlign: 'right', fontSize: 22 }}>Total number of questions:{numberOfQuestions}</Typography >
+                            <Typography sx={{ textAlign: 'right', fontSize: 24 }}>Total number of questions:{numberOfQuestions}</Typography >
                             {activeQuestions}
+                            <Typography sx={{ fontSize: 22 }}>Unactive surveys</Typography >
                             {unactiveQuestions}
                         </TabPanel>
                         <TabPanel value="1">
+                            <Typography sx={{ textAlign: 'right', fontSize: 24 }}>Total number of answered:{numberOfMyAnswered}</Typography >
                             {getMyAnsweredQuestions}
                         </TabPanel>
                         <TabPanel value="2">
-                            <CreateSurvey content={createSurveyForm}></CreateSurvey>
+                            <CreateSurvey content={createSurveyForm} numberOfMyCreated={numberOfMyCreated}></CreateSurvey>
                             {getMyCreatedQuestions}
                         </TabPanel>
                     </TabContext>

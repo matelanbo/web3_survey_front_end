@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import AddIcon from '@mui/icons-material/Add';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -16,11 +17,7 @@ const style = {
     p: 4,
 };
 
-const isMining = false
-const handleQuestionnaireCreation = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log("here is rewards to assign:")
-}
+
 
 export default function CreateSurvey(prop: any) {
     const [open, setOpen] = React.useState(false);
@@ -30,7 +27,8 @@ export default function CreateSurvey(prop: any) {
     return (
         <div>
             <div style={{ display: "flex" }}>
-                <Button onClick={handleOpen} variant="contained" color="secondary" style={{ marginLeft: "auto" }}>Creat Survey</Button>
+                <Button startIcon={<AddIcon></AddIcon>} onClick={handleOpen} variant="contained" color="secondary" style={{ marginRight: "auto" }}>Creat Survey</Button>
+                <Typography sx={{ textAlign: 'right', fontSize: 24 }}>Total number of answered:{prop.numberOfMyCreated}</Typography >
             </div>
             <Modal
                 open={open}
